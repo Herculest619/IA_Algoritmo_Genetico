@@ -31,7 +31,7 @@ import pprint
 
 # Constantes e parâmetros do experimento
 NUM_CLASSES = 3  # Número de turmas (1º Ano, 2º Ano, 3º Ano)
-NUM_PERIODS = 6  # Número de horários por dia (1º Horário, 2º Horário, 3º Horário, 4º Horário)
+NUM_PERIODS = 5  # Número de horários por dia (1º Horário, 2º Horário, 3º Horário, 4º Horário)
 POPULATION_SIZE = 10  # Tamanho da população de soluções
 MIXING_NUMBER = 2  # Número de pais usados para cruzamento
 MUTATION_RATE = 0.05  # Taxa de mutação
@@ -39,7 +39,7 @@ MUTATION_RATE = 0.05  # Taxa de mutação
 # Listas de disciplinas, professores e salas
 subjects = ["Matemática", "História", "Geografia", "Química", "Física", "Biologia", "Português", "Inglês"]
 teachers = ["Prof. A", "Prof. B", "Prof. C", "Prof. D", "Prof. E", "Prof. F"]
-rooms = ["Sala 101", "Sala 102", "Sala 103"]
+rooms = ["Sala 101", "Sala 102", "Sala 103", "Sala 104"]
 
 # Função de pontuação de aptidão - Quão boa é uma solução?
 def fitness_score(schedule):
@@ -190,21 +190,22 @@ def print_found_goal(population, to_print=True):
         
         # Se a impressão estiver habilitada, imprime o cronograma e a pontuação
         if to_print:
-            print('\nSchedule:')
+            print('\nHorário de aulas: ')
             pprint.pprint(ind)
-            print(f'Score: {score}')
+            print(f'Nota de aptidão: {score}')
         
         # Verifica se a pontuação do indivíduo é 0 (sem conflitos)
         if score == 0:
             # Se a impressão estiver habilitada, imprime que a solução foi encontrada
             if to_print:
-                print('Solution found\n')
+                print('\nSOLUÇÃO ENCONTRADA')
+                print('Geração: ', generation, '\n')
             # Retorna True indicando que uma solução sem conflitos foi encontrada
             return True
     
     # Se a impressão estiver habilitada, imprime que a solução não foi encontrada
     if to_print:
-        print('Solution not found\n')
+        print('Solução não encontrada\n')
     # Retorna False indicando que nenhuma solução sem conflitos foi encontrada
     return False
 
