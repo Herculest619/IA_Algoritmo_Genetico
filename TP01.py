@@ -30,15 +30,15 @@ import pprint
 
 # Constantes e parâmetros do experimento
 NUM_CLASSES = 3  # Número de turmas (1º Ano, 2º Ano, 3º Ano)
-NUM_PERIODS = 4  # Número de horários por dia (1º Horário, 2º Horário, 3º Horário, 4º Horário)
+NUM_PERIODS = 6  # Número de horários por dia (1º Horário, 2º Horário, 3º Horário, 4º Horário)
 POPULATION_SIZE = 10  # Tamanho da população de soluções
 MIXING_NUMBER = 2  # Número de pais usados para cruzamento
 MUTATION_RATE = 0.05  # Taxa de mutação
 
 # Listas de disciplinas, professores e salas
-subjects = ["Matemática", "História", "Geografia", "Química", "Física", "Biologia"]
+subjects = ["Matemática", "História", "Geografia", "Química", "Física", "Biologia", "Português", "Inglês"]
 teachers = ["Prof. A", "Prof. B", "Prof. C", "Prof. D", "Prof. E", "Prof. F"]
-rooms = ["Sala 101", "Sala 102", "Sala 103", "Sala 104", "Sala 105", "Sala 106"]
+rooms = ["Sala 101", "Sala 102", "Sala 103"]
 
 # Função de pontuação de aptidão - Quão boa é uma solução?
 def fitness_score(schedule):
@@ -156,20 +156,39 @@ def evolution(population):
 
 # Gera a população inicial (soluções)
 def generate_population():
+    # Cria uma lista vazia para armazenar a população inicial
     population = []
+    
+    # Loop para criar um número definido de soluções (indivíduos) na população
     for _ in range(POPULATION_SIZE):
+        # Cria uma nova solução (um cronograma de aulas)
         schedule = []
-        for _ in range(NUM_CLASSES):
+        
+        # Loop para criar um número definido de classes (turmas) no cronograma
+        for i in range(NUM_CLASSES):
+            # Cria uma lista vazia para armazenar os períodos de aula para a classe atual
             class_schedule = []
-            for _ in range(NUM_PERIODS):
+            
+            # Loop para criar um número definido de períodos (horários) para a classe
+            for j in range(NUM_PERIODS):
+                # Adiciona um período de aula à lista, escolhendo aleatoriamente um assunto, um professor e uma sala
                 class_schedule.append([
-                    random.choice(subjects),
-                    random.choice(teachers),
-                    random.choice(rooms)
+                    random.choice(subjects),   # Escolhe aleatoriamente um assunto da lista 'matérias'
+                    random.choice(teachers),   # Escolhe aleatoriamente um professor da lista 'professores'
+                    random.choice(rooms),       # Escolhe aleatoriamente uma sala da lista 'salas'
+                    str(j+1) + 'º Horário',     # Adiciona o horário atual ao período de aula
+                    str(i+1) + 'º Ano'          # Adiciona a turma atual ao período de aula
                 ])
+            # Adiciona o cronograma da classe ao cronograma geral
+            #class_schedule.append('turma '+str(i+1))
             schedule.append(class_schedule)
+        
+        # Adiciona a solução (cronograma de aulas) à população
         population.append(schedule)
+    
+    # Retorna a população gerada
     return population
+
 
 # Executa o experimento
 generation = 0
