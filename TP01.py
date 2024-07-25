@@ -42,117 +42,189 @@ rooms = ["Sala 101", "Sala 102", "Sala 103"]
 
 # Função de pontuação de aptidão - Quão boa é uma solução?
 def fitness_score(schedule):
-    conflicts = 0
+    conflicts = 0  # Inicializa o contador de conflitos com zero
 
+    # Loop para verificar conflitos dentro de cada turma
     for class_index in range(NUM_CLASSES):
-        seen_subjects = set()
+        seen_subjects = set()  # Conjunto para armazenar disciplinas já vistas na turma atual
 
+        # Loop para verificar cada período na turma atual
         for period in range(NUM_PERIODS):
-            subject = schedule[class_index][period][0]
+            subject = schedule[class_index][period][0]  # Obtém a disciplina do período atual
 
+            # Verifica se a disciplina já foi vista na turma atual
             if subject in seen_subjects:
-                conflicts += 1  # Conflito se a mesma disciplina aparece mais de uma vez para a mesma turma
-            seen_subjects.add(subject)
+                conflicts += 1  # Incrementa o contador de conflitos se a disciplina aparecer mais de uma vez na mesma turma
+            seen_subjects.add(subject)  # Adiciona a disciplina ao conjunto de disciplinas já vistas
 
+    # Loop para verificar conflitos entre turmas no mesmo período
     for period in range(NUM_PERIODS):
-        seen_teachers = set()
-        seen_rooms = set()
-        seen_subjects = set()
+        seen_teachers = set()  # Conjunto para armazenar professores já vistos no período atual
+        seen_rooms = set()  # Conjunto para armazenar salas já vistas no período atual
+        seen_subjects = set()  # Conjunto para armazenar disciplinas já vistas no período atual
 
+        # Loop para verificar cada turma no período atual
         for class_index in range(NUM_CLASSES):
-            subject = schedule[class_index][period][0]
-            teacher = schedule[class_index][period][1]
-            room = schedule[class_index][period][2]
+            subject = schedule[class_index][period][0]  # Obtém a disciplina do período atual
+            teacher = schedule[class_index][period][1]  # Obtém o professor do período atual
+            room = schedule[class_index][period][2]  # Obtém a sala do período atual
 
+            # Verifica se a disciplina já foi vista no período atual em diferentes turmas
             if subject in seen_subjects:
-                conflicts += 1  # Conflito se a mesma disciplina está sendo ensinada ao mesmo tempo em diferentes turmas
+                conflicts += 1  # Incrementa o contador de conflitos se a disciplina estiver sendo ensinada ao mesmo tempo em diferentes turmas
+            # Verifica se o professor já foi visto no período atual
             if teacher in seen_teachers:
-                conflicts += 1  # Conflito se o mesmo professor está dando mais de uma aula ao mesmo tempo
+                conflicts += 1  # Incrementa o contador de conflitos se o mesmo professor estiver dando mais de uma aula ao mesmo tempo
+            # Verifica se a sala já foi vista no período atual
             if room in seen_rooms:
-                conflicts += 1  # Conflito se a mesma sala está sendo usada para mais de uma aula ao mesmo tempo
+                conflicts += 1  # Incrementa o contador de conflitos se a mesma sala estiver sendo usada para mais de uma aula ao mesmo tempo
 
-            seen_subjects.add(subject)
-            seen_teachers.add(teacher)
-            seen_rooms.add(room)
+            seen_subjects.add(subject)  # Adiciona a disciplina ao conjunto de disciplinas já vistas
+            seen_teachers.add(teacher)  # Adiciona o professor ao conjunto de professores já vistos
+            seen_rooms.add(room)  # Adiciona a sala ao conjunto de salas já vistas
 
-    return -conflicts  # Queremos minimizar os conflitos
+    return -conflicts  # Retorna o negativo do número de conflitos (queremos minimizar os conflitos)
+
 
 # Função de seleção de pais com base na pontuação de aptidão
 def selection(population):
+    # Inicializa uma lista vazia para armazenar os pais selecionados
     parents = []
+    
+    # Encontra a menor pontuação de aptidão na população
     min_score = min(fitness_score(ind) for ind in population)
-    normalized_scores = [(fitness_score(ind) - min_score + 1) for ind in population]  # Normaliza os scores para serem positivos
-
+    
+    # Normaliza as pontuações de aptidão para serem positivas
+    normalized_scores = [(fitness_score(ind) - min_score + 1) for ind in population]
+    
+    # Para cada indivíduo na população e sua pontuação normalizada
     for ind, norm_score in zip(population, normalized_scores):
+        # Se um número aleatório dentro da faixa de pontuações normalizadas for menor que a pontuação normalizada do indivíduo
         if random.randrange(0, max(normalized_scores)) < norm_score:
+            # Adiciona o indivíduo à lista de pais selecionados
             parents.append(ind)
+    
+    # Retorna a lista de pais selecionados
     return parents
+
 
 # Função de crossover - Combina características de cada solução usando um ponto de cruzamento
 def crossover(parents):
+    # Seleciona pontos de cruzamento aleatórios
     cross_points = random.sample(range(NUM_PERIODS), MIXING_NUMBER - 1)
+    # Inicializa uma lista vazia para armazenar os descendentes
     offsprings = []
+    # Gera todas as permutações possíveis dos pais, considerando o número de pais usados para cruzamento
     permutations = list(itertools.permutations(parents, MIXING_NUMBER))
 
+    # Para cada permutação de pais
     for perm in permutations:
+        # Inicializa um novo descendente vazio
         offspring = []
+        # Ponto de início para o cruzamento
         start_pt = 0
+        # Para cada índice de pai e ponto de cruzamento
         for parent_idx, cross_point in enumerate(cross_points):
+            # Para cada classe (turma)
             for class_index in range(NUM_CLASSES):
+                # Seleciona a parte do cronograma do pai atual até o ponto de cruzamento
                 parent_part = perm[parent_idx][class_index][start_pt:cross_point]
+                # Se o descendente não tem a classe atual, adiciona a parte do pai
                 if len(offspring) <= class_index:
                     offspring.append(parent_part)
                 else:
+                    # Caso contrário, estende a classe atual com a parte do pai
                     offspring[class_index].extend(parent_part)
+            # Atualiza o ponto de início para o próximo cruzamento
             start_pt = cross_point
 
+        # Para cada classe (turma)
         for class_index in range(NUM_CLASSES):
+            # Seleciona a parte final do último pai desde o ponto de cruzamento até o final
             last_parent = perm[-1][class_index]
             parent_part = last_parent[start_pt:]
+            # Adiciona essa parte ao descendente
             offspring[class_index].extend(parent_part)
 
+        # Adiciona o descendente gerado à lista de descendentes
         offsprings.append(offspring)
 
+    # Imprime uma mensagem indicando que o crossover foi realizado
+    print('\nRealizou crossover\n')
+
+    # Retorna a lista de descendentes
     return offsprings
+
 
 # Função de mutação - Cria diversidade na população
 def mutate(schedule):
+    # Itera sobre cada turma (classe) no cronograma
     for class_index in range(NUM_CLASSES):
+        # Itera sobre cada período (horário) no cronograma da turma
         for period in range(NUM_PERIODS):
+            # Gera um número aleatório entre 0 e 1 e compara com a taxa de mutação
             if random.random() < MUTATION_RATE:
+                # Se o número aleatório for menor que a taxa de mutação, realiza a mutação
                 schedule[class_index][period] = [
-                    random.choice(subjects),
-                    random.choice(teachers),
-                    random.choice(rooms)
+                    random.choice(subjects),  # Escolhe aleatoriamente uma matéria
+                    random.choice(teachers),  # Escolhe aleatoriamente um professor
+                    random.choice(rooms)      # Escolhe aleatoriamente uma sala
                 ]
+    # Imprime uma mensagem indicando que a mutação foi realizada
+    print('\nRealizou mutação\n')
+    # Retorna o cronograma possivelmente modificado
     return schedule
+
 
 # Imprime a solução encontrada
 def print_found_goal(population, to_print=True):
+    # Itera sobre cada indivíduo na população
     for ind in population:
+        # Calcula a pontuação de aptidão do indivíduo
         score = fitness_score(ind)
+        
+        # Se a impressão estiver habilitada, imprime o cronograma e a pontuação
         if to_print:
             print('\nSchedule:')
             pprint.pprint(ind)
             print(f'Score: {score}')
-        if score == 0:  # Sem conflitos
+        
+        # Verifica se a pontuação do indivíduo é 0 (sem conflitos)
+        if score == 0:
+            # Se a impressão estiver habilitada, imprime que a solução foi encontrada
             if to_print:
                 print('Solution found\n')
+            # Retorna True indicando que uma solução sem conflitos foi encontrada
             return True
+    
+    # Se a impressão estiver habilitada, imprime que a solução não foi encontrada
     if to_print:
         print('Solution not found\n')
+    # Retorna False indicando que nenhuma solução sem conflitos foi encontrada
     return False
+
 
 # Função para implementar a evolução
 def evolution(population):
+    # Seleciona os pais a partir da população atual com base na pontuação de aptidão
     parents = selection(population)
+    
+    # Realiza o crossover entre os pais selecionados para gerar descendentes (offsprings)
     offsprings = crossover(parents)
+    
+    # Aplica mutações aos descendentes
     offsprings = list(map(mutate, offsprings))
 
+    # Combina os descendentes com a população atual
     new_gen = offsprings + population
+    
+    # Ordena a nova geração com base na pontuação de aptidão em ordem decrescente
+    # Mantém apenas os melhores indivíduos até o tamanho máximo da população
     new_gen = sorted(new_gen, key=lambda ind: fitness_score(ind), reverse=True)[:POPULATION_SIZE]
 
+    # Retorna a nova geração
     return new_gen
+
 
 # Gera a população inicial (soluções)
 def generate_population():
@@ -196,7 +268,14 @@ population = generate_population()
 
 # Loop até encontrar a solução
 while not print_found_goal(population):
+    # Imprime a geração atual
     print(f'Generation: {generation}')
+    
+    # Verifica e imprime a pontuação de aptidão da população atual
     print_found_goal(population)
+    
+    # Evolui a população para a próxima geração
     population = evolution(population)
+    
+    # Incrementa o contador de gerações
     generation += 1
