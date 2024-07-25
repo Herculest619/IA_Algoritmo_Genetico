@@ -38,28 +38,28 @@ MUTATION_RATE = 0.05  # Taxa de mutação
 # Listas de disciplinas, professores e salas
 subjects = ["Matemática", "História", "Geografia", "Química", "Física", "Biologia"]
 teachers = ["Prof. A", "Prof. B", "Prof. C", "Prof. D", "Prof. E", "Prof. F"]
-rooms = ["Sala 101", "Sala 102", "Sala 103", "Sala 104", "Sala 105", "Sala 106"]
+rooms = ["Sala 101", "Sala 102", "Sala 103", "Sala 104"]
 
 # Função de pontuação de aptidão - Quão boa é uma solução?
 def fitness_score(schedule):
     conflicts = 0
 
-    for period in range(NUM_PERIODS):
+    for class_index in range(NUM_CLASSES):
         seen_subjects = set()
         seen_teachers = set()
         seen_rooms = set()
 
-        for class_index in range(NUM_CLASSES):
+        for period in range(NUM_PERIODS):
             subject = schedule[class_index][period][0]
             teacher = schedule[class_index][period][1]
             room = schedule[class_index][period][2]
 
             if subject in seen_subjects:
-                conflicts += 1
+                conflicts += 1  # Conflito se a mesma disciplina aparece mais de uma vez para a mesma turma
             if teacher in seen_teachers:
-                conflicts += 1
+                conflicts += 1  # Conflito se o mesmo professor está dando mais de uma aula ao mesmo tempo
             if room in seen_rooms:
-                conflicts += 1
+                conflicts += 1  # Conflito se a mesma sala está sendo usada para mais de uma aula ao mesmo tempo
 
             seen_subjects.add(subject)
             seen_teachers.add(teacher)
