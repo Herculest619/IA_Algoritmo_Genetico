@@ -1,12 +1,13 @@
 '''Exemplo de indivíduo
 Aula de 1 dia apenas
-4 aulas por dia
-Não há aulas repetidas no mesmo dia
+
+x horarios por dia
 Aulas não podem ser simultâneas para um mesmo professor.
 Aulas não podem ser simultâneas para uma mesma turma.
 Cada sala deve ter apenas uma aula por vez.
-Turma [0] e Horario [1] não seram alterados
-Algoritmo mudará somente matéria[2], professor[3] e sala[4]
+
+Horario [3] e Turma [4] não seram alterados
+Algoritmo mudará somente matéria[0], professor[1] e sala[2]
 
 [["1º Ano", 1º Horario, "Matemática", "Prof. A", "Sala 101"], 
 ["1º Ano", 2º Horario, "História", "Prof. B", "Sala 102"],
@@ -150,7 +151,7 @@ def crossover(parents):
         offsprings.append(offspring)
 
     # Imprime uma mensagem indicando que o crossover foi realizado
-    print('\nRealizou crossover\n')
+    #print('\nRealizou crossover\n')
 
     # Retorna a lista de descendentes
     return offsprings
@@ -164,14 +165,18 @@ def mutate(schedule):
         for period in range(NUM_PERIODS):
             # Gera um número aleatório entre 0 e 1 e compara com a taxa de mutação
             if random.random() < MUTATION_RATE:
+                time = schedule[class_index][period][3]
+                year = schedule[class_index][period][4]
                 # Se o número aleatório for menor que a taxa de mutação, realiza a mutação
                 schedule[class_index][period] = [
                     random.choice(subjects),  # Escolhe aleatoriamente uma matéria
                     random.choice(teachers),  # Escolhe aleatoriamente um professor
-                    random.choice(rooms)      # Escolhe aleatoriamente uma sala
+                    random.choice(rooms),      # Escolhe aleatoriamente uma sala
+                    time,                     # Mantém o horário atual
+                    year                      # Mantém a turma atual
                 ]
     # Imprime uma mensagem indicando que a mutação foi realizada
-    print('\nRealizou mutação\n')
+    # print('\nRealizou mutação\n')
     # Retorna o cronograma possivelmente modificado
     return schedule
 
