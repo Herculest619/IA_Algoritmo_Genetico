@@ -37,8 +37,8 @@ MIXING_NUMBER = 2  # Número de pais usados para cruzamento
 MUTATION_RATE = 0.05  # Taxa de mutação
 
 # Listas de disciplinas, professores e salas
-subjects = ["Matemática", "História", "Geografia", "Química", "Física", "Biologia", "Português", "Inglês"]
-teachers = ["Prof. A", "Prof. B", "Prof. C", "Prof. D", "Prof. E", "Prof. F"]
+subjects = ["Matemática", "História", "Geografia", "Química", "Física", "Biologia"]
+teachers = ["Prof. Ana", "Prof. Bruno", "Prof. Camila", "Prof. Diego", "Prof. Elisa", "Prof. Felipe"]
 rooms = ["Sala 101", "Sala 102", "Sala 103", "Sala 104"]
 
 # Função de pontuação de aptidão - Quão boa é uma solução?
@@ -150,9 +150,6 @@ def crossover(parents):
         # Adiciona o descendente gerado à lista de descendentes
         offsprings.append(offspring)
 
-    # Imprime uma mensagem indicando que o crossover foi realizado
-    #print('\nRealizou crossover\n')
-
     # Retorna a lista de descendentes
     return offsprings
 
@@ -175,8 +172,6 @@ def mutate(schedule):
                     time,                     # Mantém o horário atual
                     year                      # Mantém a turma atual
                 ]
-    # Imprime uma mensagem indicando que a mutação foi realizada
-    # print('\nRealizou mutação\n')
     # Retorna o cronograma possivelmente modificado
     return schedule
 
