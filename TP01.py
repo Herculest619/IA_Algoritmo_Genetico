@@ -185,7 +185,9 @@ def print_found_goal(population, to_print=True):
         
         # Se a impressão estiver habilitada, imprime o cronograma e a pontuação
         if to_print:
+            #comente para ter somente a nota de aptidão
             print('\nHorário de aulas: ')
+            #comente para ter somente a nota de aptidão
             pprint.pprint(ind)
             print(f'Nota de aptidão: {score}')
         
@@ -193,14 +195,14 @@ def print_found_goal(population, to_print=True):
         if score == 0:
             # Se a impressão estiver habilitada, imprime que a solução foi encontrada
             if to_print:
-                print('\nSOLUÇÃO ENCONTRADA')
+                print('SOLUÇÃO ENCONTRADA')
                 print('Geração: ', generation, '\n')
             # Retorna True indicando que uma solução sem conflitos foi encontrada
             return True
     
     # Se a impressão estiver habilitada, imprime que a solução não foi encontrada
     if to_print:
-        print('Solução não encontrada\n')
+        print('Solução não encontrada')
     # Retorna False indicando que nenhuma solução sem conflitos foi encontrada
     return False
 
@@ -270,10 +272,12 @@ population = generate_population()
 # Loop até encontrar a solução
 while not print_found_goal(population):
     # Imprime a geração atual
-    print(f'Generation: {generation}')
+    print(f'Generation: {generation}\n\n')
+    #print sem quebra de linha
+    
     
     # Verifica e imprime a pontuação de aptidão da população atual
-    print_found_goal(population)
+    #print_found_goal(population)
     
     # Evolui a população para a próxima geração
     population = evolution(population)
