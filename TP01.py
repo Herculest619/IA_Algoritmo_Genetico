@@ -1,4 +1,4 @@
-'''Exemplo de indivíduo
+'''
 Aula de 1 dia apenas
 
 x horarios por dia
@@ -9,6 +9,7 @@ Cada sala deve ter apenas uma aula por vez.
 Horario [3] e Turma [4] não seram alterados
 Algoritmo mudará somente matéria[0], professor[1] e sala[2]
 
+Exemplo de indivíduo
 [["1º Ano", 1º Horario, "Matemática", "Prof. A", "Sala 101"], 
 ["1º Ano", 2º Horario, "História", "Prof. B", "Sala 102"],
 ["1º Ano", 3º Horario, "Geografia", "Prof. C", "Sala 101"], 
@@ -21,6 +22,8 @@ Algoritmo mudará somente matéria[0], professor[1] e sala[2]
 ["3º Ano", 2º Horario, "Biologia", "Prof. D", "Sala 104"]]
 ["3º Ano", 3º Horario, "Física", "Prof. E", "Sala 103"],
 ["3º Ano", 4º Horario, "Geografia", "Prof. F", "Sala 104"]]
+
+
 '''
 
 
