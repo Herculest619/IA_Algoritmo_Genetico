@@ -278,7 +278,6 @@ while not print_found_goal(population):
     print(f'Generation: {generation}\n\n')
     #print sem quebra de linha
     
-    
     # Verifica e imprime a pontuação de aptidão da população atual
     #print_found_goal(population)
     
